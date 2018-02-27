@@ -22,11 +22,14 @@ class Shoe(list):
 
     def draw(self):
         if self.__used != self.__stopper:
-            card = self.pop(0)
+            card = self.pop()
             self.__used += 1
             return card
         else:
-            raise RulesError('Not Enough Cards in Deck')
+            print("Passed Cut Card")
+            card = self.pop(0)
+            self.__used += 1
+            return card
 
     def insert_card(self, number):
         if int(number) > len(self) or int(number) < 1:
@@ -47,37 +50,69 @@ class Shoe(list):
 
 
 def test():
+    print("1. Create a New Shoe")
     shoe = Shoe('CardList')
+    print()
+    print("2. Print the Shoe")
     print(shoe)
+    print()
+    print("3. Shuffle the Shoe")
     shoe.shuffle()
+    print()
+    print("4. Print the Shoe")
     print(shoe)
+    print()
+    print("5. Create a shoe with 2 Decks")
     shoe = Shoe('CardList',2)
+    print()
+    print("6. Create a shoe with 1 Deck")
     shoe = Shoe('CardList',1)
+    print()
+    print("7. Fail Gracefully to create a deck with 0.5 Decks")
     try:
         shoe = Shoe('CardList',0.5)
     except:
         print("successfully failed to create deck with 0.5 decks")
+    cutCard = 2
+    print()
+    print("8. Create a shoe with 1 Deck")
     shoe = Shoe('CardList',1)
+    print()
+    print("9. Print the Shoe")
     print(shoe)
-    shoe.insert_card(10)
+    shoe.insert_card(cutCard)
+    print()
+    print("10. Draw a card from the Shoe")
     s = shoe.draw()
+    print()
+    print("11. Print the Drawn Card")
     print(s)
+    print()
+    print("12. Draw 10 Cards")
     for placeholder in range(1,10):
         s = shoe.draw()
         print(s)
+    print()
+    print("13. Print the Shoe")
     print(shoe)
-    try:
-        while True:
-            shoe.draw()
-    except:
-        print("successfully failed to go past cut card")
+    print()
+    print("14. Draw until past the Cut Card")
+    for placeholder in range(0,cutCard):
+        shoe.draw()
+    print("successfully went past the cut card")
+    print()
+    print("15. Shuffle the Shoe")
     shoe.shuffle()
+    print()
+    print("16. Print the Shoe")
     print(shoe)
-    shoe = Shoe('CardList')
+    print()
+    print("17. Draw 40 Cards from the Shoe")
     for placeholder in range(1,40):
         s = shoe.draw()
         print(s)
+    print()
+    print("18. Print the Shoe")
     print(shoe)
 
-test()
 

@@ -1,4 +1,5 @@
 from random import *
+from RulesError import RulesError
 
 class Card(object):
     #region Class Values
@@ -14,29 +15,46 @@ class Card(object):
     namesSoft = dict(zip(names,soft))
     suitDict = dict(zip(suits,suitUnicode))
     #endregion
-    def __init__(self,rank,suit):
+    def __init__(self,rank,suit,showing=True):
         self.__name = rank
         self.__hard = Card.namesHard[rank]
         self.__soft = Card.namesSoft[rank]
         self.__suit = suit
+        self.__showing = showing
+
+    def flip(self):
+        self.__showing = not self.__showing
 
     def use_unicode(self):
         Card.Unicode = not Card.Unicode
 
     def __str__(self):
         cardStr = ''
-        if Card.Unicode:
-            cardStr = cardStr + self.__name + ' of ' + Card.suitDict[self.__suit.lower()]
+        if self.__showing:
+            if Card.Unicode:
+                cardStr = cardStr + self.__name + ' of ' + Card.suitDict[self.__suit.lower()]
+            else:
+                cardStr = cardStr + self.__name + ' of ' + self.__suit.lower().capitalize()
+            if self.__hard != self.__soft:
+                cardStr = cardStr + ': Hard {}, Soft {}'.format(self.__hard,self.__soft)
+            else:
+                cardStr = cardStr + ': Hard {}'.format(self.__hard)
+            return cardStr
         else:
-            cardStr = cardStr + self.__name + ' of ' + self.__suit.lower().capitalize()
-        if self.__hard != self.__soft:
-            cardStr = cardStr + ': Hard {}, Soft {}'.format(self.__hard,self.__soft)
-        else:
-            cardStr = cardStr + ': Hard {}'.format(self.__hard)
-        return cardStr
+            raise RulesError("Cannot see unflipped Card")
 
-    def get_name(self):
+    def get_hard(self):
+        return self.__hard
+
+    def get_soft(self):
+        return self.__soft
+
+    def get_rank(self):
         return self.__name
 
     def __eq__(self, other):
-        return self.__name == other.__name
+        return self.__hard == other.__hard
+
+    hard = property(get_hard)
+    soft = property(get_soft)
+    rank = property(get_rank)
