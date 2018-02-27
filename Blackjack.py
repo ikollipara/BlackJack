@@ -13,12 +13,13 @@ def main():
         player = Player(name)
         player.sit(table)
     dealer.sit(table)
+    table.take_bets()
     while len(table.Players) > 0:
-        table.take_bets()
         table.deal()
         table.play_round()
         table.payout()
         dealer.restock()
+        table.take_bets()
     table.outro()
 
 main()

@@ -3,6 +3,7 @@ from Hand import Hand
 from getFunctions import *
 from RulesError import RulesError
 
+
 class Table(object):
     def __init__(self, dealer, numberOfDecks=6):
         self.shoe = Shoe('CardList', numberOfDecks)
@@ -40,6 +41,7 @@ Money: ${}""".format(player.name, player.money))
                 cardTwo = self.shoe.draw()
                 player = self.Players[counter]
                 player.add_hand(Hand(card, cardTwo, self.Bets[counter]))
+
             counter += 1
         card = self.shoe.draw()
         cardTwo = self.shoe.draw()
@@ -61,7 +63,7 @@ Money: ${}""".format(player.name, player.money))
                                 hand.stand()
                             elif command in ['double down', 'd']:
                                 addBet = hand.bet
-                                while addBet > hand.bet/2:
+                                while int(addBet) > hand.bet/2:
                                     addBet = get_integer("Please enter your additional bet: ")
                                 card = self.shoe.draw()
                                 hand.double_down(card, int(addBet))
@@ -72,6 +74,9 @@ Money: ${}""".format(player.name, player.money))
                                     newHand = hand.split()
                                     card = self.shoe.draw()
                                     player.add_hand(Hand(newHand, card, hand.bet))
+                                    player.rake_out(hand.bet)
+                                    newCard = self.shoe.draw()
+                                    hand.hit(newCard)
                             elif command in ['insurance','i']:
                                 if not player.is_Insured():
                                     sideBet = hand.bet + 1
@@ -90,23 +95,28 @@ Money: ${}""".format(player.name, player.money))
         for player in self.Players:
             if len(player.hands) == 0:
                 pass
+            elif player.is_Insured():
+                if self.dealer.hands.is_blackjack():
+                    player.rake_in(player.InsuranceBet*2)
             else:
                 for hand in player.hands:
                     if hand.is_blackjack():
-                        player.rake_in(hand.bet*2)
-                    elif self.dealer.hands.is_busted():
-                        bet = hand.bet*2
-                        bet = bet/3
+                        bet = hand.bet * 2
+                        bet = bet / 3
                         round(bet)
                         player.rake_in(bet)
+                    elif self.dealer.hands.is_busted():
+                        player.rake_in(hand.bet*2)
                     else:
                         if 21 > hand.value() > self.dealer.hands.value():
                             bet = hand.bet * 2
                             bet = bet / 3
-                            round(bet)
+                            round(bet, 1)
                             player.rake_in(bet)
                         else:
                             print("{} lost ${}".format(player.name, hand.bet))
+                            self.dealer.rake_in(hand.bet)
+
             if player.money <= 0:
                 self.Players.remove(player)
                 print("{} ran out of money, and left!".format(player.name))

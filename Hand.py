@@ -4,15 +4,15 @@ from RulesError import RulesError
 
 
 class Hand(object):
-    doubleDown = False
-    Split = False
-    BlackJack = False
     def __init__(self, card, cardTwo, bet):
         self.cards = [card, cardTwo]
         self.hard = card.hard + cardTwo.hard
         self.soft = card.soft + cardTwo.soft
         self.bet = bet
         self.Stand = False
+        self.doubleDown = False
+        self.Split = False
+        self.BlackJack = False
 
     def hit(self, card):
         self.cards.append(card)
@@ -22,7 +22,7 @@ class Hand(object):
     def double_down(self, card, addedBet):
         self.bet = self.bet + addedBet
         self.hit(card)
-        Hand.doubleDown = True
+        self.doubleDown = True
 
     def show(self,number):
         return self.cards[number]
@@ -38,9 +38,9 @@ class Hand(object):
             if cardOne.get_rank() == 'Ace' or cardTwo.get_rank() == 'Ace':
                 blackjack += 1
             if blackjack == 2:
-                Hand.BlackJack = True
-                Hand.Stand = True
-        return Hand.BlackJack
+                self.BlackJack = True
+                self.Stand = True
+        return self.BlackJack
 
     def stand(self):
         self.Stand = True
@@ -59,10 +59,10 @@ class Hand(object):
             return False
 
     def is_split(self):
-        return Hand.Split
+        return self.Split
 
     def is_double_down(self):
-        return Hand.doubleDown
+        return self.doubleDown
 
     def is_busted(self):
         if self.hard > 21:

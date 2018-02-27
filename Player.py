@@ -3,14 +3,14 @@ from Hand import Hand
 from Card import Card
 
 class Player(object):
-    Insurance = False
-    InsuranceBet = 0
     Surrender = False
     def __init__(self, name, money=1000):
         self.name = name
         self.money = money
         self.table = None
         self. hands = []
+        self.Insurance = False
+        self.InsuranceBet = 0
 
     def sit(self, table):
         self.table = table
@@ -97,11 +97,11 @@ Menu Options:
             return command
 
     def insurance(self, sideBet):
-        if Player.Insurance == True:
+        if self.Insurance == True:
             raise RulesError("Cannot have mulitple Insurances per hand")
         else:
-            Player.Insurance = True
-            Player.InsuranceBet = sideBet
+            self.Insurance = True
+            self.InsuranceBet = sideBet
 
     def surrender(self, hand):
         bet = hand.bet/2
@@ -112,7 +112,7 @@ Menu Options:
         return Player.Surrender
 
     def is_Insured(self):
-        return Player.Insurance
+        return self.Insurance
 
     def rake_in(self, bet):
         self.money += bet
