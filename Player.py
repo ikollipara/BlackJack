@@ -26,9 +26,10 @@ class Player(object):
         legalInputs = ['bet','leave','b','l']
         command = input()
         if command.lower() not in legalInputs:
-            raise ValueError("Must enter bet, leave, b, or l")
+            print("Please enter in a real command")
+            command = input()
         else:
-            if command in ['bet','b']:
+            if command.lower() in ['bet','b']:
                 bet = input("Please enter your bet: ")
             else:
                 bet = None

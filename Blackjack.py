@@ -22,4 +22,5 @@ def main():
         table.take_bets()
     table.outro()
 
+
 main()

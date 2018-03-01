@@ -15,6 +15,7 @@ class Table(object):
         self.shoe.shuffle()
 
     def take_bets(self):
+        self.Bets.clear()
         removePlayers = []
         for player in self.Players:
             print("""
@@ -83,6 +84,8 @@ Money: ${}""".format(player.name, player.money))
                                     while sideBet > hand.bet:
                                         sideBet = get_integer("Please enter your side bet: ")
                                     player.insurance(int(sideBet))
+                    if hand.is_busted():
+                        print("{} Busted!".format(player.name))
         while self.dealer.hands.hard < 17:
             card = self.shoe.draw()
             self.dealer.hands.hit(card)
@@ -98,13 +101,16 @@ Money: ${}""".format(player.name, player.money))
             elif player.is_Insured():
                 if self.dealer.hands.is_blackjack():
                     player.rake_in(player.InsuranceBet*2)
+                    print("{} won {} by Insurance".format(player.name, player.InsuranceBet*2))
             else:
                 for hand in player.hands:
                     if hand.is_blackjack():
                         bet = hand.bet * 2
                         bet = bet / 3
-                        round(bet)
+                        round(bet, 1)
                         player.rake_in(bet)
+                        print("{} has Black Jack!".format(player.name))
+                        print("{} has won {}!".format(player.name, bet))
                     elif self.dealer.hands.is_busted():
                         player.rake_in(hand.bet*2)
                     else:
@@ -113,6 +119,10 @@ Money: ${}""".format(player.name, player.money))
                             bet = bet / 3
                             round(bet, 1)
                             player.rake_in(bet)
+                            print("{} won {}!".format(player.name, bet))
+                        elif hand.value() == self.dealer.hands.value():
+                            print("{} Pushed!".format(player.name))
+                            player.rake_in(hand.bet)
                         else:
                             print("{} lost ${}".format(player.name, hand.bet))
                             self.dealer.rake_in(hand.bet)
@@ -141,7 +151,6 @@ choose to leave. Have Fun!
 """)
 
     def outro(self):
-        if __name__ == '__main__':
             print("""
 Created By: Ian Kollipara
     
