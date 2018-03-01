@@ -105,8 +105,8 @@ Money: ${}""".format(player.name, player.money))
             else:
                 for hand in player.hands:
                     if hand.is_blackjack():
-                        bet = hand.bet * 2
-                        bet = bet / 3
+                        bet = hand.bet * 3
+                        bet = bet / 2
                         round(bet, 1)
                         player.rake_in(bet)
                         print("{} has Black Jack!".format(player.name))
