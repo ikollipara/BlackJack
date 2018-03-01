@@ -15,12 +15,13 @@ class Table(object):
         self.shoe.shuffle()
 
     def take_bets(self):
-        self.Bets.clear()
+        self.Bets = []
         removePlayers = []
         for player in self.Players:
             print("""
 Name:   {}
 Money: ${}""".format(player.name, player.money))
+            player.clear_hands()
             bet = player.bet_or_leave()
             if bet == None:
                 removePlayers.append(player)
@@ -107,17 +108,20 @@ Money: ${}""".format(player.name, player.money))
                     if hand.is_blackjack():
                         bet = hand.bet * 3
                         bet = bet / 2
-                        round(bet, 1)
+                        bet = round(bet, 1)
+                        bet = hand.bet + bet
                         player.rake_in(bet)
                         print("{} has Black Jack!".format(player.name))
                         print("{} has won {}!".format(player.name, bet))
                     elif self.dealer.hands.is_busted():
-                        player.rake_in(hand.bet*2)
+                        bet = hand.bet*2
+                        bet = bet + hand.bet
+                        player.rake_in(bet)
                     else:
                         if 21 > hand.value() > self.dealer.hands.value():
-                            bet = hand.bet * 2
-                            bet = bet / 3
-                            round(bet, 1)
+                            bet = hand.bet*2
+                            bet = round(bet, 1)
+                            bet = bet + hand.bet
                             player.rake_in(bet)
                             print("{} won {}!".format(player.name, bet))
                         elif hand.value() == self.dealer.hands.value():

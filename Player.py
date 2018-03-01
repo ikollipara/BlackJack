@@ -16,6 +16,9 @@ class Player(object):
         self.table = table
         table.Players.append(self)
 
+    def clear_hands(self):
+        self.hands = []
+
     def add_hand(self,hand):
         self.hands.append(hand)
 
