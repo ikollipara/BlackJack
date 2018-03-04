@@ -15,19 +15,23 @@ class Hand(object):
         self.BlackJack = False
 
     def hit(self, card):
+        """Adds, Hits, a card to the current hand"""
         self.cards.append(card)
         self.hard = self.hard + card.hard
         self.soft = self.soft + card.soft
 
     def double_down(self, card, addedBet):
+        """Adds one card for a chance to double the bet, can only be run on intial turn"""
         self.bet = self.bet + addedBet
         self.hit(card)
         self.doubleDown = True
 
     def show(self,number):
+        """Shows a card from the hand"""
         return self.cards[number]
 
     def is_blackjack(self):
+        """Checks to see if the hand is blackjack"""
         blackjack = 0
         if len(self.cards) == 2:
             cardOne = self.cards[0]
@@ -43,9 +47,11 @@ class Hand(object):
         return self.BlackJack
 
     def stand(self):
+        """Returns Stand"""
         self.Stand = True
 
     def split(self):
+        """Splits the hand. Returns a new card and changes the value in the hand"""
         newHand = self.cards.pop()
         Hand.Split = True
         self.hard = self.hard - newHand.hard
@@ -53,18 +59,22 @@ class Hand(object):
         return newHand
 
     def is_21(self):
+        """Checks to see if hand is 21"""
         if self.hard == 21 or self.soft == 21:
             return True
         else:
             return False
 
     def is_split(self):
+        """Returns Split"""
         return self.Split
 
     def is_double_down(self):
+        """Returns doubledown"""
         return self.doubleDown
 
     def is_busted(self):
+        """Checks to see if hand is busted, and returns a boolean"""
         if self.hard > 21:
             bust = True
         else:
@@ -72,12 +82,14 @@ class Hand(object):
         return bust
 
     def can_hit(self):
+        """Checks to see if hand can be hit. Returns boolean"""
         canHit = True
         if self.is_busted() or self.is_double_down() or self.is_blackjack() or self.is_21() or self.Stand:
             canHit = False
         return canHit
 
     def can_split(self):
+        """Checks to see if splitting is legal, returns boolean"""
         split = False
         counter = 0
         if len(self.cards) < 2:
@@ -91,12 +103,14 @@ class Hand(object):
         return split
 
     def can_double(self):
+        """Checks to see if doubling down is legal, returns a boolean"""
         double = False
         if len(self.cards) == 2:
             double = True
         return double
 
     def value(self):
+        """Returns to current, legal, value for the hand"""
         if self.soft > 21:
             return self.hard
         else:
@@ -108,9 +122,14 @@ class Hand(object):
             handStr = handStr + str(card) + '\n'
         handStr = handStr[:-1]
         if self.hard != self.soft:
-            handStr = handStr + """
+            if self.soft <= 21:
+                handStr = handStr + """
 --------------
 Total Hard: {}, Total Soft: {}""".format(self.hard, self.soft)
+            elif self.soft > 21:
+                handStr = handStr + """
+                --------------
+                Total Hard: {}, Total Soft: Busted!""".format(self.hard)
         elif self.soft > 21:
             handStr = handStr + """
 --------------

@@ -13,16 +13,20 @@ class Player(object):
         self.InsuranceBet = 0
 
     def sit(self, table):
+        """Adds player to the Table"""
         self.table = table
         table.Players.append(self)
 
     def clear_hands(self):
+        """Removes all player hands"""
         self.hands = []
 
     def add_hand(self,hand):
+        """Adds a hand to the player"""
         self.hands.append(hand)
 
     def bet_or_leave(self):
+        """asks the user if they want to bet or leave. If they bet 0 they sit the round out"""
         print("""
 [B]et
 [L]eave""")
@@ -101,6 +105,7 @@ Menu Options:
             return command
 
     def insurance(self, sideBet):
+        """Gives player insurance. Checks for multiple insurance from a player"""
         if self.Insurance == True:
             raise RulesError("Cannot have mulitple Insurances per hand")
         else:
@@ -116,12 +121,15 @@ Menu Options:
         return Player.Surrender
 
     def is_Insured(self):
+        """Returns Insurance"""
         return self.Insurance
 
     def rake_in(self, bet):
+        """Adds money to the player's amount"""
         self.money += bet
 
     def rake_out(self, bet):
+        """Removes money from the player. Ran by dealer during the betting phase"""
         self.money = self.money - bet
 
     def __str__(self):

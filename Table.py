@@ -12,9 +12,11 @@ class Table(object):
         self.Bets = []
 
     def shuffle(self):
+        """Shuffles the Shoe"""
         self.shoe.shuffle()
 
     def take_bets(self):
+        """Takes all the player bets and adds them to the self.Bets list"""
         self.Bets = []
         removePlayers = []
         for player in self.Players:
@@ -33,6 +35,7 @@ Money: ${}""".format(player.name, player.money))
                 self.Players.remove(player)
 
     def deal(self):
+        """Deals to all active players. Skips players who bet 0"""
         counter = 0
         while counter < len(self.Players):
             if self.Bets[counter] == 0:
@@ -51,6 +54,7 @@ Money: ${}""".format(player.name, player.money))
 
 
     def play_round(self):
+        """Plays the Round. Runs through each player's hands, followed by the next player"""
         for player in self.Players:
             if len(player.hands) == 0:
                 pass
@@ -96,6 +100,7 @@ Money: ${}""".format(player.name, player.money))
                 print("Dealer's Hand is {}".format(self.dealer.hands.value()))
 
     def payout(self):
+        """Pays out the bets and earnings"""
         for player in self.Players:
             if len(player.hands) == 0:
                 pass
