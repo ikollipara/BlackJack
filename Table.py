@@ -37,6 +37,9 @@ Money: ${}""".format(player.name, player.money))
     def deal(self):
         """Deals to all active players. Skips players who bet 0"""
         counter = 0
+        #
+        # The While loop is used as the bets are needed for a hand, but are gotten earlier
+        #
         while counter < len(self.Players):
             if self.Bets[counter] == 0:
                 pass
@@ -55,10 +58,19 @@ Money: ${}""".format(player.name, player.money))
 
     def play_round(self):
         """Plays the Round. Runs through each player's hands, followed by the next player"""
+        #
+        # Runs a loop for each player
+        #
         for player in self.Players:
+            #
+            # Skips players who sat out this round
+            #
             if len(player.hands) == 0:
                 pass
             else:
+                #
+                # Runs a loop for every hand
+                #
                 for hand in player.hands:
                     while hand.can_hit():
                             command = player.play(self.dealer.show_card(), hand)
@@ -77,6 +89,9 @@ Money: ${}""".format(player.name, player.money))
                                 if not hand.can_split():
                                     raise RulesError("Cannot Split this hand")
                                 else:
+                                    #
+                                    # Runs thru all the stuff needed for a complete split
+                                    #
                                     newHand = hand.split()
                                     card = self.shoe.draw()
                                     player.add_hand(Hand(newHand, card, hand.bet))
@@ -91,13 +106,16 @@ Money: ${}""".format(player.name, player.money))
                                     player.insurance(int(sideBet))
                     if hand.is_busted():
                         print("{} Busted!".format(player.name))
+        #
+        # This is the dealer's "play" method. It was too basic to be its own thing, at least in my opinion
+        #
         while self.dealer.hands.hard < 17:
             card = self.shoe.draw()
             self.dealer.hands.hit(card)
             if self.dealer.hands.is_busted():
                 print("Dealer Busts!")
-            else:
-                print("Dealer's Hand is {}".format(self.dealer.hands.value()))
+        if not self.dealer.hands.is_busted():
+            print("Dealer has {}".format(self.dealer.hands.hard))
 
     def payout(self):
         """Pays out the bets and earnings"""
@@ -105,11 +123,17 @@ Money: ${}""".format(player.name, player.money))
             if len(player.hands) == 0:
                 pass
             elif player.is_Insured():
+                #
+                # Pays out insurance first
+                #
                 if self.dealer.hands.is_blackjack():
                     player.rake_in(player.InsuranceBet*2)
                     print("{} won {} by Insurance".format(player.name, player.InsuranceBet*2))
             else:
                 for hand in player.hands:
+                    #
+                    # Handles all the math associated with a winning bet,a nd rounds to the nearest int
+                    #
                     if hand.is_blackjack():
                         bet = hand.bet * 3
                         bet = bet / 2
@@ -138,7 +162,7 @@ Money: ${}""".format(player.name, player.money))
 
             if player.money <= 0:
                 self.Players.remove(player)
-                print("{} ran out of money, and left!".format(player.name))
+                print("{} ran out of money, and blacked out!".format(player.name))
     def introduction(self):
         print("""
 ██████╗ ██╗      █████╗  ██████╗██╗  ██╗     ██╗ █████╗  ██████╗██╗  ██╗

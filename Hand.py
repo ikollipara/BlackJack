@@ -117,9 +117,10 @@ class Hand(object):
             return self.soft
 
     def __str__(self):
-        handStr = ''
+        handStr = '['
         for card in self.cards:
-            handStr = handStr + str(card) + '\n'
+            handStr += str(card)
+        handStr += ']'
         handStr = handStr[:-1]
         if self.hard != self.soft:
             if self.soft <= 21:

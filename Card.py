@@ -32,13 +32,9 @@ class Card(object):
         cardStr = ''
         if self.__showing:
             if Card.Unicode:
-                cardStr = cardStr + self.__name + ' of ' + Card.suitDict[self.__suit.lower()]
+                cardStr = cardStr + self.__name + Card.suitDict[self.__suit.lower()]
             else:
                 cardStr = cardStr + self.__name + ' of ' + self.__suit.lower().capitalize()
-            if self.__hard != self.__soft:
-                cardStr = cardStr + ': Hard {}, Soft {}'.format(self.__hard,self.__soft)
-            else:
-                cardStr = cardStr + ': Hard {}'.format(self.__hard)
             return cardStr
         else:
             raise RulesError("Cannot see unflipped Card")

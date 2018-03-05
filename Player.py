@@ -26,11 +26,12 @@ class Player(object):
         self.hands.append(hand)
 
     def bet_or_leave(self):
-        """asks the user if they want to bet or leave. If they bet 0 they sit the round out"""
+        """asks the user if they want to bet or leave"""
         print("""
 [B]et
+[S]it Out
 [L]eave""")
-        legalInputs = ['bet','leave','b','l']
+        legalInputs = ['bet','leave', 'sit out', 's', 'b', 'l']
         command = input()
         if command.lower() not in legalInputs:
             print("Please enter in a real command")
@@ -38,26 +39,23 @@ class Player(object):
         else:
             if command.lower() in ['bet','b']:
                 bet = input("Please enter your bet: ")
+            elif command.lower() in ['sit out', 's']:
+                bet = 0
             else:
                 bet = None
             return bet
 
     def play(self, card, hand):
+        """Contains all player menus associated with a playing round"""
         legalCommands = ['h', 's', 'd', 'p', 'i', 'hit', 'stand', 'double down', 'split', 'insurance']
         print("""
-Name: {}
-Dealer's Card: {}, Not Showing
+--------------------Current Player: {}--------------------
+Dealer's Card: 
+{}, Not Showing
+--------------------Current Hand--------------------
 {}""".format(self.name, card,str(hand)))
         if hand.can_split():
-            if card.hard == 10:
-                print("""
-Menu Options:
-[H]it
-[S]tand
-[D]ouble Down
-S[P]lit
-""")
-            elif card.rank == 'Ace':
+            if card.rank == 'Ace':
                 print("""
 Menu Options:
 [H]it
@@ -75,14 +73,7 @@ Menu Options:
 S[P]lit
 """)
         elif hand.can_split() == False:
-            if card.hard == 10:
-                print("""
-Menu Options:
-[H]it
-[S]tand
-[D]ouble Down
-""")
-            elif card.rank == 'Ace':
+            if card.rank == 'Ace':
                 print("""
 Menu Options:
 [H]it
